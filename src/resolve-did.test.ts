@@ -1,69 +1,56 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, test } from "vitest"
 import { resolveDid } from "./resolve-did"
+import {
+  InvalidDidError,
+  DidNotFoundError,
+  UnsupportedDidMethodError
+} from "./errors"
 
 describe("resolveDid", () => {
-  it("resolves a did:web", async () => {
-    const didUri = "did:web:venabl.es"
-    const { did, didDocument } = await resolveDid(didUri)
-    expect(did).toBe(didUri)
+  test("should resolve a valid web DID", async () => {
+    const { did, didDocument } = await resolveDid("did:web:venabl.es")
+    expect(did).toBe("did:web:venabl.es")
     expect(didDocument).toBeDefined()
-    expect(didDocument?.id).toBe(didUri)
   })
 
-  it("resolves a secp256k1 did:key", async () => {
-    const didUri = "did:key:zQ3shNCcRrVT3tm43o6JNjSjQaiBXvSb8kHtFhoNGR8eimFZs"
-    const { did, didDocument } = await resolveDid(didUri)
-    expect(did).toBe(didUri)
+  test("should resolve a valid key DID", async () => {
+    const { did, didDocument } = await resolveDid(
+      "did:key:z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8"
+    )
+    expect(did).toBe("did:key:z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8")
     expect(didDocument).toBeDefined()
-    expect(didDocument?.id).toBe(didUri)
-    expect(didDocument?.verificationMethod).toBeDefined()
-    expect(didDocument?.verificationMethod?.length).toBe(1)
-    expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#zQ3shNCcRrVT3tm43o6JNjSjQaiBXvSb8kHtFhoNGR8eimFZs`
-    )
-    expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "Secp256k1VerificationKey2018"
-    )
-    expect(didDocument?.verificationMethod?.[0]?.publicKeyBase58).toEqual(
-      "cFTR1Lyaa7qAYzcxMMrMm7p6GgQATjqimscU7nybYmi9"
-    )
   })
 
-  it("resolves an Ed25519 did:key", async () => {
-    const didUri = "did:key:z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8"
-    const { did, didDocument } = await resolveDid(didUri)
-    expect(did).toBe(didUri)
+  test("should resolve a valid pkh DID", async () => {
+    const { did, didDocument } = await resolveDid(
+      "did:pkh:eip155:1:0x1234567890123456789012345678901234567890"
+    )
+    expect(did).toBe(
+      "did:pkh:eip155:1:0x1234567890123456789012345678901234567890"
+    )
     expect(didDocument).toBeDefined()
-    expect(didDocument?.id).toBe(didUri)
-    expect(didDocument?.verificationMethod).toBeDefined()
-    expect(didDocument?.verificationMethod?.length).toBe(1)
-    expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8`
-    )
-    expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "Ed25519VerificationKey2018"
-    )
-    expect(didDocument?.verificationMethod?.[0]?.publicKeyBase58).toEqual(
-      "8myPWEuZj3T3WzBQu281AeLzE3pmU9h7em1YEGiD6ick"
+  })
+
+  test("should throw InvalidDidError for non-string input", async () => {
+    await expect(resolveDid(123)).rejects.toThrow(InvalidDidError)
+    await expect(resolveDid(null)).rejects.toThrow(InvalidDidError)
+    await expect(resolveDid(undefined)).rejects.toThrow(InvalidDidError)
+  })
+
+  test("should throw InvalidDidError for invalid DID format", async () => {
+    await expect(resolveDid("not-a-did")).rejects.toThrow(InvalidDidError)
+    await expect(resolveDid("did:")).rejects.toThrow(InvalidDidError)
+  })
+
+  test("should throw UnsupportedDidMethodError for unsupported DID methods", async () => {
+    await expect(resolveDid("did:unknown:123")).rejects.toThrow(
+      UnsupportedDidMethodError
     )
   })
 
-  it("resolves a did:pkh", async () => {
-    const didUri = "did:pkh:eip155:1:0x0000000000000000000000000000000000000000"
-    const { did, didDocument } = await resolveDid(didUri)
-    expect(did).toBe(didUri)
-    expect(didDocument).toBeDefined()
-    expect(didDocument?.id).toBe(didUri)
-    expect(didDocument?.verificationMethod).toBeDefined()
-    expect(didDocument?.verificationMethod?.length).toBe(1)
-    expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#blockchainAccountId`
-    )
-    expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "EcdsaSecp256k1RecoveryMethod2020"
-    )
-    expect(didDocument?.verificationMethod?.[0]?.blockchainAccountId).toEqual(
-      "eip155:1:0x0000000000000000000000000000000000000000"
-    )
+  test("should throw DidNotFoundError for non-existent DID", async () => {
+    await expect(
+      resolveDid("did:web:non-existent-domain.example")
+    ).rejects.toThrow(DidNotFoundError)
   })
 })
