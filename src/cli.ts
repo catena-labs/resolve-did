@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { inspect } from "node:util"
+
 import { resolveDid } from "./resolve-did"
 
 async function main(didUri?: string) {
@@ -11,7 +12,7 @@ async function main(didUri?: string) {
 
   const { didDocument } = await resolveDid(didUri)
   console.log(
-    inspect(didDocument, { colors: true, depth: null, compact: false })
+    inspect(didDocument, { colors: true, depth: null, compact: false }),
   )
 }
 

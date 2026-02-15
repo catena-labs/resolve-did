@@ -3,7 +3,7 @@ import {
   resolveDid as ackResolveDid,
   isDidUri,
   type DidDocument,
-  type DidUri
+  type DidUri,
 } from "@agentcommercekit/did"
 
 /**
@@ -15,7 +15,7 @@ import {
  */
 export async function resolveDid(
   didUri: unknown,
-  resolver = getDidResolver()
+  resolver = getDidResolver(),
 ): Promise<{ did: DidUri; didDocument: DidDocument }> {
   if (!isDidUri(didUri)) {
     throw new Error("Invalid DID URI")
@@ -25,6 +25,6 @@ export async function resolveDid(
 
   return {
     did,
-    didDocument
+    didDocument,
   }
 }

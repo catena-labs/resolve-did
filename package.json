@@ -4,52 +4,50 @@
   "description": "Resolve DIDs from the command line and in code",
   "homepage": "https://github.com/catena-labs/resolve-did#readme",
   "bugs": "https://github.com/catena-labs/resolve-did/issues",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/catena-labs/resolve-did.git"
-  },
   "license": "MIT",
   "author": {
     "name": "Catena Labs",
     "url": "https://catenalabs.com"
   },
-  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catena-labs/resolve-did.git"
+  },
   "bin": {
-    "resolve-did": "dist/cli.js"
+    "resolve-did": "dist/cli.mjs"
   },
   "files": [
     "dist"
   ],
+  "type": "module",
   "scripts": {
     "build": "tsdown src/index.ts src/cli.ts --dts",
-    "check": "pnpm check:format && pnpm check:lint && pnpm check:types && pnpm test && pnpm check:publint",
-    "check:format": "prettier --check .",
-    "check:lint": "eslint .",
-    "check:publint": "publint",
-    "check:types": "tsc --noEmit",
+    "check": "bun run build && bun format:check && bun lint && bun typecheck && bun run test && bun publint",
     "clean": "git clean -fdX .turbo dist",
-    "fix": "pnpm format && pnpm lint:fix",
-    "format": "prettier --write .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "prepublishOnly": "pnpm build",
-    "test": "vitest"
+    "cli": "bun src/cli.ts",
+    "fix": "bun format && bun lint:fix",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:fix": "bun lint -- --fix --fix-suggestions",
+    "nuke": "bun run clean && git clean -xdf node_modules",
+    "outdated": "bunx npm-check-updates --interactive --format group",
+    "prepublishOnly": "bun build",
+    "publint": "publint",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@agentcommercekit/did": "^0.2.0"
+    "@agentcommercekit/did": "^0.10.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "@types/node": "^22.15.29",
-    "eslint": "^9.28.0",
-    "globals": "^16.2.0",
-    "prettier": "^3.5.3",
-    "prettier-plugin-packagejson": "^2.5.15",
-    "publint": "^0.3.12",
-    "tsdown": "^0.12.6",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1",
-    "vitest": "^3.2.1"
-  },
-  "packageManager": "pnpm@10.11.0"
+    "@types/bun": "^1.3.9",
+    "@types/node": "^25.2.3",
+    "oxfmt": "^0.32.0",
+    "oxlint": "^1.47.0",
+    "oxlint-tsgolint": "^0.12.2",
+    "publint": "^0.3.17",
+    "tsdown": "^0.20.3",
+    "typescript": "^5.9.3"
+  }
 }
