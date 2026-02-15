@@ -1,4 +1,5 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect } from "bun:test"
+
 import { resolveDid } from "./resolve-did"
 
 describe("resolveDid", () => {
@@ -19,13 +20,13 @@ describe("resolveDid", () => {
     expect(didDocument?.verificationMethod).toBeDefined()
     expect(didDocument?.verificationMethod?.length).toBe(1)
     expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#zQ3shNCcRrVT3tm43o6JNjSjQaiBXvSb8kHtFhoNGR8eimFZs`
+      `${did}#zQ3shNCcRrVT3tm43o6JNjSjQaiBXvSb8kHtFhoNGR8eimFZs`,
     )
     expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "Secp256k1VerificationKey2018"
+      "Secp256k1VerificationKey2018",
     )
     expect(didDocument?.verificationMethod?.[0]?.publicKeyBase58).toEqual(
-      "cFTR1Lyaa7qAYzcxMMrMm7p6GgQATjqimscU7nybYmi9"
+      "cFTR1Lyaa7qAYzcxMMrMm7p6GgQATjqimscU7nybYmi9",
     )
   })
 
@@ -38,13 +39,13 @@ describe("resolveDid", () => {
     expect(didDocument?.verificationMethod).toBeDefined()
     expect(didDocument?.verificationMethod?.length).toBe(1)
     expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8`
+      `${did}#z6MknEES6VA14awWdV27ab5r1jtz3d6ct2wULmvU4YgE1wQ8`,
     )
     expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "Ed25519VerificationKey2018"
+      "Ed25519VerificationKey2018",
     )
     expect(didDocument?.verificationMethod?.[0]?.publicKeyBase58).toEqual(
-      "8myPWEuZj3T3WzBQu281AeLzE3pmU9h7em1YEGiD6ick"
+      "8myPWEuZj3T3WzBQu281AeLzE3pmU9h7em1YEGiD6ick",
     )
   })
 
@@ -57,13 +58,13 @@ describe("resolveDid", () => {
     expect(didDocument?.verificationMethod).toBeDefined()
     expect(didDocument?.verificationMethod?.length).toBe(1)
     expect(didDocument?.verificationMethod?.[0]?.id).toBe(
-      `${did}#blockchainAccountId`
+      `${did}#blockchainAccountId`,
     )
     expect(didDocument?.verificationMethod?.[0]?.type).toBe(
-      "EcdsaSecp256k1RecoveryMethod2020"
+      "EcdsaSecp256k1RecoveryMethod2020",
     )
     expect(didDocument?.verificationMethod?.[0]?.blockchainAccountId).toEqual(
-      "eip155:1:0x0000000000000000000000000000000000000000"
+      "eip155:1:0x0000000000000000000000000000000000000000",
     )
   })
 })
