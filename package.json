@@ -32,7 +32,7 @@
     "lint:fix": "bun lint -- --fix --fix-suggestions",
     "nuke": "bun run clean && git clean -xdf node_modules",
     "outdated": "bunx npm-check-updates --interactive --format group",
-    "prepublishOnly": "bun build",
+    "prepublishOnly": "bun run build",
     "publint": "publint",
     "test": "bun test",
     "typecheck": "tsc --noEmit"
