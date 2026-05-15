@@ -1,26 +1,23 @@
 #!/usr/bin/env node
 
-import { inspect } from "node:util"
-
 import { resolveDid } from "./resolve-did"
 
+const USAGE = "Usage: npx resolve-did <did-uri>"
+
 async function main(didUri?: string) {
-  if (!didUri) {
-    console.error("Usage: npx resolve-did <did-uri>")
-    process.exit(1)
+  if (!didUri || didUri === "--help" || didUri === "-h") {
+    console.error(USAGE)
+    process.exit(didUri ? 0 : 1)
   }
 
-  const { didDocument } = await resolveDid(didUri)
-  console.log(
-    inspect(didDocument, { colors: true, depth: null, compact: false }),
-  )
+  try {
+    const { didDocument } = await resolveDid(didUri)
+    console.log(JSON.stringify(didDocument, null, 2))
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error(`Error: ${message}`)
+    process.exit(1)
+  }
 }
 
 main(process.argv[2])
-  .then(() => {
-    process.exit(0)
-  })
-  .catch((error: unknown) => {
-    console.error(error)
-    process.exit(1)
-  })

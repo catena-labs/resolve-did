@@ -10,6 +10,9 @@ Use it from the command line:
 npx resolve-did did:web:venabl.es
 ```
 
+The CLI prints the resolved DID document as formatted JSON, so it can be piped
+into tools such as `jq`.
+
 Or, use it in code:
 
 ```ts
