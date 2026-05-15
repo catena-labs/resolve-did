@@ -1,1 +1,5 @@
-export { resolveDid } from "./resolve-did"
+export {
+  resolveDid,
+  safeResolveDid,
+  type ResolveDidResult,
+} from "./resolve-did"

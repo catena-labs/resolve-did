@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test"
 
-import { resolveDid } from "./resolve-did"
+import { resolveDid, safeResolveDid } from "./resolve-did"
 
 describe("resolveDid", () => {
   it("resolves a did:web", async () => {
@@ -66,5 +66,29 @@ describe("resolveDid", () => {
     expect(didDocument?.verificationMethod?.[0]?.blockchainAccountId).toEqual(
       "eip155:1:0x0000000000000000000000000000000000000000",
     )
+  })
+
+  it("returns a success result when safe resolution succeeds", async () => {
+    const didUri = "did:pkh:eip155:1:0x0000000000000000000000000000000000000000"
+    const result = await safeResolveDid(didUri)
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) {
+      throw new Error(result.error)
+    }
+
+    expect(result.did).toBe(didUri)
+    expect(result.didDocument.id).toBe(didUri)
+  })
+
+  it("returns an error result when safe resolution fails", async () => {
+    const result = await safeResolveDid("not-a-did")
+
+    expect(result.ok).toBe(false)
+    if (result.ok) {
+      throw new Error("Expected resolution to fail")
+    }
+
+    expect(result.error).toBe("Invalid DID URI")
   })
 })

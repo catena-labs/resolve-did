@@ -6,6 +6,17 @@ import {
   type DidUri,
 } from "@agentcommercekit/did"
 
+export type ResolveDidResult =
+  | {
+      ok: true
+      did: DidUri
+      didDocument: DidDocument
+    }
+  | {
+      ok: false
+      error: string
+    }
+
 /**
  * Resolve a did URI
  *
@@ -26,5 +37,32 @@ export async function resolveDid(
   return {
     did,
     didDocument,
+  }
+}
+
+/**
+ * Resolve a DID URI without throwing.
+ *
+ * This is useful in agent and API flows where callers need a structured
+ * success/failure value instead of exception control flow.
+ *
+ * @param didUri - The DID URI to resolve
+ * @param resolver - The resolver to use
+ * @returns A discriminated result containing either the DID document or an error
+ */
+export async function safeResolveDid(
+  didUri: unknown,
+  resolver = getDidResolver(),
+): Promise<ResolveDidResult> {
+  try {
+    return {
+      ok: true,
+      ...(await resolveDid(didUri, resolver)),
+    }
+  } catch (error: unknown) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    }
   }
 }

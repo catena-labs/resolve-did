@@ -18,6 +18,21 @@ import { resolveDid } from "resolve-did"
 const { did, didDocument } = await resolveDid("did:web:venabl.es")
 ```
 
+Use `safeResolveDid` when you want a structured result instead of thrown
+errors:
+
+```ts
+import { safeResolveDid } from "resolve-did"
+
+const result = await safeResolveDid("did:web:venabl.es")
+
+if (result.ok) {
+  console.log(result.didDocument)
+} else {
+  console.error(result.error)
+}
+```
+
 ## Examples
 
 ```sh
