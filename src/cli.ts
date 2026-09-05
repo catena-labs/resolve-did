@@ -21,6 +21,8 @@ main(process.argv[2])
     process.exit(0)
   })
   .catch((error: unknown) => {
-    console.error(error)
+    console.error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    )
     process.exit(1)
   })
