@@ -12,7 +12,13 @@ async function main(didUri?: string) {
 
   const { didDocument } = await resolveDid(didUri)
   console.log(
-    inspect(didDocument, { colors: true, depth: null, compact: false }),
+    inspect(didDocument, {
+      // Hard-coding colors corrupts piped output (e.g. `| jq`, `> did.json`)
+      // with ANSI escapes. Only colorize for interactive terminals.
+      colors: process.stdout.isTTY ?? false,
+      depth: null,
+      compact: false,
+    }),
   )
 }
 
